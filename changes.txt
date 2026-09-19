@@ -1,0 +1,20 @@
+echoserver
+	added srv.settimeout and try/except/finally blocks so keyboard interrupt works
+	added buffer so whole words/phrases can be capitalized
+
+starter_server
+	added keyboard interrupt code
+	added nickname validation
+	added msg command, changed nick dict to save obj, added lock for nick command
+	fixed client lock bug, only lock when checking dict
+	added quit command, lock only when popping from dict
+	added who command, similar logic to broadcast method
+	added check for renames, removes old name and notifies chatroom	
+	added PM command
+	created client.py
+	added binary mode, added new code to serve_client to support, changed send_line to 		account for binary mode
+client.py
+	added binary mode to match server.py
+	added send_cmd for binary mode
+
+
