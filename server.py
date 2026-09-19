@@ -27,6 +27,7 @@ ERRORS = {
     103: "not registered",
     104: "no such user",
     105: "line too long",
+    106: "timeout"
 }
 
 
@@ -144,13 +145,13 @@ def serve_client(conn, addr, binary_mode):
     most often get wrong, so it is provided -- read it until you can explain
     why the `while b"\\n" in buf` loop is a `while` and not an `if`.
     """
-    conn.settimeout(120.0) # drop idle clients after 2 minutes
+    conn.settimeout(600.0) # drop idle clients after 10 minutes
     cli = Client(conn, addr, binary_framing=binary_mode)
     buf = b""
     try:
         while True:
             if binary_mode:
-               # 1. Accumulate exactly 4 bytes for the length prefix
+               # 1. get exactly 4 bytes
                 while len(buf) < 4:
                     chunk = conn.recv(4096)
                     if not chunk:
@@ -162,7 +163,7 @@ def serve_client(conn, addr, binary_mode):
                 if message_length > MAX_LINE:
                     cli.error(105)
                     return
-                # 2. Accumulate exactly `message_length` bytes for the payload
+                # 2. get exactly `message_length` bytes for the payload
                 while len(buf) < message_length:
                     chunk = conn.recv(4096)
                     if not chunk:
@@ -204,7 +205,7 @@ def serve_client(conn, addr, binary_mode):
                 cli.error(105)
                 buf = b""
     except socket.timeout:
-        cli.error(103)
+        cli.error(106)
     except OSError:
         pass
     finally:
@@ -219,7 +220,7 @@ def serve_client(conn, addr, binary_mode):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--host", default="0.0.0.0")
+    ap.add_argument("--host", default="127.0.0.1")
     ap.add_argument("--port", type=int, default=5050)
     ap.add_argument("--binary", action="store_true") # binary framing
     args = ap.parse_args()
