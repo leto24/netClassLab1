@@ -1,13 +1,13 @@
 Made in a Python 3.14 virtual environment
 
---Activate virtual environment-- -- Optional--
-	[env].\Scripts\activate
+	**Activate virtual environment** ** Optional**
+[env].\Scripts\activate
 
--- Start Server --
-	python server.py --host 127.0.0.1 --port 5050
+	** Start Server **
+python server.py --host 127.0.0.1 --port 5050
 
--- Start Client --
-	python client.py
+	** Start Client **
+python client.py
 
 INFO
 
